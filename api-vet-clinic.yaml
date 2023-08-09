@@ -48,6 +48,11 @@ paths:
           description: Идентификатор владельца
           schema:
             type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Owner'
       responses:
         '200':
           description: Успешный запрос
@@ -87,12 +92,11 @@ paths:
           description: Идентификатор владельца
           schema:
             type: integer
-        - in: query
-          name: pet
-          required: true
-          description: Информация о питомце
-          schema:
-            $ref: '#/components/schemas/PetInput'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetInput'
       responses:
         '201':
           description: Питомец добавлен успешно
@@ -157,12 +161,11 @@ paths:
           description: Идентификатор питомца
           schema:
             type: integer
-        - in: query
-          name: pet
-          required: true
-          description: Информация о питомце
-          schema:
-            $ref: '#/components/schemas/PetInput'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetInput'
       responses:
         '200':
           description: Успешный запрос
