@@ -1,0 +1,237 @@
+openapi: 3.0.0
+
+info:
+  title: Ветеринарная клиника
+  description: API для управления данными о владельцах собак и их питомцах
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Локальный сервер
+paths:
+  /owners:
+    get:
+      summary: Получить список всех владельцев
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Owner'
+  /owners/{ownerId}:
+    get:
+      summary: Получить информацию о владельце
+      parameters:
+        - in: path
+          name: ownerId
+          required: true
+          description: Идентификатор владельца
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        '404':
+          description: Владелец не найден
+    put:
+      summary: Обновить информацию о владельце
+      parameters:
+        - in: path
+          name: ownerId
+          required: true
+          description: Идентификатор владельца
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        '404':
+          description: Владелец не найден
+  /owners/{ownerId}/pets:
+    get:
+      summary: Получить список питомцев владельца
+      parameters:
+        - in: path
+          name: ownerId
+          required: true
+          description: Идентификатор владельца
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+        '404':
+          description: Владелец не найден
+    post:
+      summary: Добавить нового питомца владельцу
+      parameters:
+        - in: path
+          name: ownerId
+          required: true
+          description: Идентификатор владельца
+          schema:
+            type: integer
+        - in: query
+          name: pet
+          required: true
+          description: Информация о питомце
+          schema:
+            $ref: '#/components/schemas/PetInput'
+      responses:
+        '201':
+          description: Питомец добавлен успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: Владелец не найден
+  /pets:
+    get:
+      summary: Получить список всех питомцев
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+    post:
+      summary: Добавить нового питомца
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetInput'
+      responses:
+        '201':
+          description: Питомец добавлен успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+  /pets/{petId}:
+    get:
+      summary: Получить информацию о питомце
+      parameters:
+        - in: path
+          name: petId
+          required: true
+          description: Идентификатор питомца
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: Питомец не найден
+    put:
+      summary: Обновить информацию о питомце
+      parameters:
+        - in: path
+          name: petId
+          required: true
+          description: Идентификатор питомца
+          schema:
+            type: integer
+        - in: query
+          name: pet
+          required: true
+          description: Информация о питомце
+          schema:
+            $ref: '#/components/schemas/PetInput'
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: Питомец не найден
+    delete:
+      summary: Удалить питомца
+      parameters:
+        - in: path
+          name: petId
+          required: true
+          description: Идентификатор питомца
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Питомец удален успешно
+        '404':
+          description: Питомец не найден
+components:
+  schemas:
+    Owner:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: string
+      required:
+        - id
+        - name
+        - phone
+    Pet:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        breed:
+          type: string
+        age:
+          type: integer
+        owner:
+          $ref: '#/components/schemas/Owner'
+      required:
+        - id
+        - name
+        - breed
+        - age
+    PetInput:
+      type: object
+      properties:
+        name:
+          type: string
+        breed:
+          type: string
+        age:
+          type: integer
+        ownerId:
+          type: integer
+      required:
+        - name
+        - breed
+        - age
+        - ownerId
